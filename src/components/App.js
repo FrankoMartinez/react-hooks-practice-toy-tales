@@ -23,12 +23,21 @@ function App() {
 
   // Add a new toy to the page
   function addNewToy(newToy) {
-    setToys({...toys, newToy})
+    setToys([...toys, newToy])
   }
 
   // Clicking the donate to GoodWill button will delete it
-  function handleDeleteButton(deletedToy) {
-    setToys({...toys, deletedToy})
+  function handleDeleteButton(toyDeleted) {
+    const updatedToys = toys.filter((toy) => toy.id !== toyDeleted.id)
+    setToys(updatedToys)
+  }
+
+  // Will increase the toys like count + 1 every click
+  function handleLikeButton(updatedToy) {
+    const updatedToys = toys.map((toy) =>
+      toy.id === updatedToy.id ? updatedToy : toy
+    )
+    return setToys(updatedToys)
   }
 
   return (
@@ -38,7 +47,7 @@ function App() {
       <div className="buttonContainer">
         <button onClick={handleClick}>Add a Toy</button>
       </div>
-      <ToyContainer toys={toys} handleDeleteButton={handleDeleteButton} />
+      <ToyContainer toys={toys} handleDeleteButton={handleDeleteButton} handleLikeButton={handleLikeButton}/>
     </>
   );
 }

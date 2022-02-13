@@ -1,14 +1,32 @@
 import React from "react";
 
-function ToyCard({ toy, handleDeleteButton }) {
-  const { name, image, likes } = toy
+function ToyCard({ toy, handleDeleteButton, handleLikeButton }) {
+  const { id, name, image, likes } = toy
 
-  function handleDonateButton(id) {
-    fetch(`http://localhost:3001/toys/:id`, {
+  function handleDeleteClick() {
+    fetch(`http://localhost:3001/toys/${id}`, {
       method: "DELETE",
     })
     .then(res => res.json())
-    .then(data => handleDeleteButton(data))
+    .then(() => {
+      handleDeleteButton(toy)
+    })
+  }
+
+  function handleLikeClick() {
+    const updateObj = {
+      likes : likes + 1,
+    }
+
+    fetch(`http://localhost:3001/toys/${id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(updateObj),
+    })
+    .then(res => res.json())
+    .then(handleLikeButton)
   }
 
   return (
@@ -20,8 +38,8 @@ function ToyCard({ toy, handleDeleteButton }) {
         className="toy-avatar"
       />
       <p>{likes} Likes </p>
-      <button className="like-btn">Like {"<3"}</button>
-      <button className="del-btn" onClick={handleDonateButton}>Donate to GoodWill</button>
+      <button className="like-btn" onClick={handleLikeClick}>Like {"<3"}</button>
+      <button className="del-btn" onClick={handleDeleteClick}>Donate to GoodWill</button>
     </div>
   );
 }
